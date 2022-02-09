@@ -1,0 +1,39 @@
+{% extends 'game_finder/main.html' %}
+
+{% block content%}
+{% if game_search %}
+<p class="fst-italic">You searched for: {{game_search}}</p>
+{%else%}
+<h1>You forgot to search.</h1>
+{% endif%}
+
+
+{% for g in g_list %}
+{% if g.status%}
+<div class="d-flex flex-column">
+    <div><a  class="fs-4 text-decoration-none link-info fw-bold" href='{{g.link}}'>{{g.name}}</a> <p class="fs-4">Price: {{g.price}} RSD</p><p class="fs-5 text-success fw-bold">IN STOCK at {{g.get_shop_name}}</p>
+    </div>
+    <hr>
+</div>
+{% else %}
+<div class="d-flex flex-column">
+    <div><a class="fs-4 text-decoration-none link-info fw-bold" href='{{g.link}}'>{{g.name}}</a> <p class="fs-4">Price: {{g.price}} RSD</p><p class="fs-5 text-danger fw-bold">OUT OF STOCK at {{g.get_shop_name}}</p>
+    </div>
+    <hr>
+</div>
+{% endif %}
+{%endfor%}
+
+
+{% if g_list.has_previous%}
+    <a class="text-decoration-none mt-5" href="?page=1{% if request.GET.searched %}&searched={{ request.GET.searched }}{% endif %}{% if request.GET.instock%}&instock={{request.GET.instock}}{%endif%}"> <<</a>
+    <a class="text-decoration-none mt-5" href="?page={{g_list.previous_page_number}}{% if request.GET.searched %}&searched={{ request.GET.searched }}{% endif %}{% if request.GET.instock%}&instock={{request.GET.instock}}{%endif%}">Previous</a>
+{% endif %}
+
+Page {{g_list.number }} of {{g_list.paginator.num_pages}}
+
+{% if g_list.has_next%}
+    <a class="text-decoration-none mt-5" href="?page={{g_list.next_page_number}}{% if request.GET.searched %}&searched={{ request.GET.searched }}{% endif %}{% if request.GET.instock%}&instock={{request.GET.instock}}{%endif%}">Next</a>
+    <a class="text-decoration-none mt-5" href="?page={{g_list.paginator.num_pages}}{% if request.GET.searched %}&searched={{ request.GET.searched }}{% endif %}{% if request.GET.instock%}&instock={{request.GET.instock}}{%endif%}">>></a>
+{% endif %}
+{%endblock%}
